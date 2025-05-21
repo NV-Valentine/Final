@@ -4,14 +4,16 @@
 #include <locale>
 #include <fstream>
 
-int main() {
+int main() 
+{
     std::setlocale(LC_ALL, "");
     wchar_t currentPath[MAX_PATH] = L"C:\\";
     wchar_t input[MAX_PATH];
     int choice;
 
 
-    while (true) {
+    while (true) 
+    {
         std::wcout << L"\n--- Menu ---\n";
         std::wcout << L"1. Show available drives\n";
         std::wcout << L"2. Show current folder contents\n";
@@ -25,5 +27,58 @@ int main() {
         std::wcout << L"Choose option: ";
         std::wcin >> choice;
         std::wcin.ignore();
+
+        if (choice == 1) showDrives();
+        else if (choice == 2) listDirectory(currentPath);
+        else if (choice == 3) goUpDirectory(currentPath);
+        else if (choice == 4) 
+        {
+            std::wcout << L"Enter folder path: ";
+            std::wcin.getline(input, MAX_PATH);
+            wcscpy_s(currentPath, MAX_PATH, input);
+        }
+        else if (choice == 5) 
+        {
+            std::wcout << L"Enter mask (e.g. *.txt): ";
+            std::wcin.getline(input, MAX_PATH);
+            searchFiles(currentPath, input);
+        }
+        else if (choice == 6)
+        {
+            std::wcout << L"Enter file path: ";
+            std::wcin.getline(input, MAX_PATH);
+            wchar_t pattern[256];
+            std::wcout << L"Enter search string: ";
+            std::wcin.getline(pattern, 256);
+            searchInFile(input, pattern);
+        }
+        else if (choice == 7) 
+        {
+            std::wcout << L"Enter file path: ";
+            std::wcin.getline(input, MAX_PATH);
+            wchar_t findText[256], replaceText[256];
+            std::wcout << L"Text to find: ";
+            std::wcin.getline(findText, 256);
+            std::wcout << L"Replace with: ";
+            std::wcin.getline(replaceText, 256);
+            findAndReplace(input, findText, replaceText);
+        }
+        else if (choice == 8)
+        {
+            wchar_t src[MAX_PATH], dest[MAX_PATH];
+            std::wcout << L"Source file path: ";
+            std::wcin.getline(src, MAX_PATH);
+            std::wcout << L"Destination file path: ";
+            std::wcin.getline(dest, MAX_PATH);
+            copyFile(src, dest);
+        }
+        else if (choice == 9) 
+        {
+            std::wcout << L"Exiting...\n";
+            break;
+        }
+        else std::wcout << L"Invalid option!\n";
+        
+    }
     return 0;
 }
