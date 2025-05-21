@@ -4,8 +4,6 @@
 #include <locale>
 #include <fstream>
 
-
-
 void showDrives() 
 {
     DWORD drives = GetLogicalDrives();
@@ -15,6 +13,29 @@ void showDrives()
             std::wcout << letter << L":\\\n";
         }
     }
+}
+
+void listDirectory(const wchar_t* path) {
+    WIN32_FIND_DATAW findFileData;
+    wchar_t searchPath[MAX_PATH];
+    wcscpy_s(searchPath, MAX_PATH, path);
+    wcscat_s(searchPath, MAX_PATH, L"\\*");
+
+    HANDLE hFind = FindFirstFileW(searchPath, &findFileData);
+    if (hFind == INVALID_HANDLE_VALUE) {
+        std::wcout << L"Error: cannot open folder!\n";
+        return;
+    }
+
+    std::wcout << L"\nContents of " << path << L":\n";
+    do {
+        if (wcscmp(findFileData.cFileName, L".") != 0 && wcscmp(findFileData.cFileName, L"..") != 0) {
+            std::wcout << (findFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY ? L"[DIR] " : L"[FILE] ");
+            std::wcout << findFileData.cFileName << L"\n";
+        }
+    } while (FindNextFileW(hFind, &findFileData));
+
+    FindClose(hFind);
 }
 
 
