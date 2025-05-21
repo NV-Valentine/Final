@@ -57,6 +57,27 @@ void copyFile(const wchar_t* source, const wchar_t* destination) {
     }
 }
 
+void searchFiles(const wchar_t* path, const wchar_t* mask) {
+    WIN32_FIND_DATAW findFileData;
+    wchar_t searchPath[MAX_PATH];
+    wcscpy_s(searchPath, MAX_PATH, path);
+    wcscat_s(searchPath, MAX_PATH, L"\\");
+    wcscat_s(searchPath, MAX_PATH, mask);
+
+    HANDLE hFind = FindFirstFileW(searchPath, &findFileData);
+    if (hFind == INVALID_HANDLE_VALUE) {
+        std::wcout << L"No files found for this mask.\n";
+        return;
+    }
+
+    std::wcout << L"\nFiles matching " << mask << L":\n";
+    do {
+        std::wcout << findFileData.cFileName << L"\n";
+    } while (FindNextFileW(hFind, &findFileData));
+
+    FindClose(hFind);
+}
+
 
 int main() 
 {
