@@ -10,5 +10,20 @@ int main() {
     wchar_t input[MAX_PATH];
     int choice;
 
+
+    while (true) {
+        std::wcout << L"\n--- Menu ---\n";
+        std::wcout << L"1. Show available drives\n";
+        std::wcout << L"2. Show current folder contents\n";
+        std::wcout << L"3. Go up one level\n";
+        std::wcout << L"4. Change folder\n";
+        std::wcout << L"5. Search files by mask\n";
+        std::wcout << L"6. Search string in file\n";
+        std::wcout << L"7. Find and replace in file\n";
+        std::wcout << L"8. Copy file\n";
+        std::wcout << L"9. Exit\n";
+        std::wcout << L"Choose option: ";
+        std::wcin >> choice;
+        std::wcin.ignore();
     return 0;
 }
