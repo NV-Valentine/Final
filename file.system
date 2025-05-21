@@ -99,6 +99,45 @@ void searchInFile(const wchar_t* filePath, const wchar_t* pattern) {
     file.close();
 }
 
+void findAndReplace(const wchar_t* filePath, const wchar_t* findText, const wchar_t* replaceText) {
+    std::wifstream file(filePath);
+    if (!file.is_open()) {
+        std::wcout << L"Error opening file!\n";
+        return;
+    }
+    file.imbue(std::locale(""));
+
+    wchar_t buffer[10240] = L"";
+    wchar_t line[1024];
+    while (!file.eof()) {
+        file.getline(line, 1024);
+
+        wchar_t* pos = wcsstr(line, findText);
+        while (pos) {
+            wchar_t temp[1024];
+            wcsncpy_s(temp, line, pos - line);
+            temp[pos - line] = L'\0';
+            wcscat_s(temp, replaceText);
+            wcscat_s(temp, pos + wcslen(findText));
+            wcscpy_s(line, temp);
+            pos = wcsstr(line, findText);
+        }
+        wcscat_s(buffer, line);
+        wcscat_s(buffer, L"\n");
+    }
+    file.close();
+
+    std::wofstream out(filePath);
+    if (!out.is_open()) {
+        std::wcout << L"Error writing to file!\n";
+        return;
+    }
+    out.imbue(std::locale(""));
+    out << buffer;
+    out.close();
+
+    std::wcout << L"Text replaced successfully.\n";
+}
 
 int main() 
 {
