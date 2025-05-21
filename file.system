@@ -4,6 +4,20 @@
 #include <locale>
 #include <fstream>
 
+
+
+void showDrives() 
+{
+    DWORD drives = GetLogicalDrives();
+    std::wcout << L"\nAvailable drives:\n";
+    for (wchar_t letter = L'A'; letter <= L'Z'; letter++) {
+        if (drives & (1 << (letter - L'A'))) {
+            std::wcout << letter << L":\\\n";
+        }
+    }
+}
+
+
 int main() 
 {
     std::setlocale(LC_ALL, "");
