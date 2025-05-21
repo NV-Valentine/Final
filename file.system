@@ -3,3 +3,12 @@
 #include <cwchar>
 #include <locale>
 #include <fstream>
+
+int main() {
+    std::setlocale(LC_ALL, "");
+    wchar_t currentPath[MAX_PATH] = L"C:\\";
+    wchar_t input[MAX_PATH];
+    int choice;
+
+    return 0;
+}
