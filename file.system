@@ -8,28 +8,34 @@ void showDrives()
 {
     DWORD drives = GetLogicalDrives();
     std::wcout << L"\nAvailable drives:\n";
-    for (wchar_t letter = L'A'; letter <= L'Z'; letter++) {
-        if (drives & (1 << (letter - L'A'))) {
+    for (wchar_t letter = L'A'; letter <= L'Z'; letter++) 
+    {
+        if (drives & (1 << (letter - L'A'))) 
+        {
             std::wcout << letter << L":\\\n";
         }
     }
 }
 
-void listDirectory(const wchar_t* path) {
+void listDirectory(const wchar_t* path) 
+{
     WIN32_FIND_DATAW findFileData;
     wchar_t searchPath[MAX_PATH];
     wcscpy_s(searchPath, MAX_PATH, path);
     wcscat_s(searchPath, MAX_PATH, L"\\*");
 
     HANDLE hFind = FindFirstFileW(searchPath, &findFileData);
-    if (hFind == INVALID_HANDLE_VALUE) {
+    if (hFind == INVALID_HANDLE_VALUE) 
+    {
         std::wcout << L"Error: cannot open folder!\n";
         return;
     }
 
     std::wcout << L"\nContents of " << path << L":\n";
-    do {
-        if (wcscmp(findFileData.cFileName, L".") != 0 && wcscmp(findFileData.cFileName, L"..") != 0) {
+    do 
+    {
+        if (wcscmp(findFileData.cFileName, L".") != 0 && wcscmp(findFileData.cFileName, L"..") != 0) 
+        {
             std::wcout << (findFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY ? L"[DIR] " : L"[FILE] ");
             std::wcout << findFileData.cFileName << L"\n";
         }
@@ -38,26 +44,33 @@ void listDirectory(const wchar_t* path) {
     FindClose(hFind);
 }
 
-void goUpDirectory(wchar_t* path) {
+void goUpDirectory(wchar_t* path) 
+{
     size_t len = wcslen(path);
-    for (size_t i = len - 1; i > 0; --i) {
-        if (path[i] == L'\\') {
+    for (size_t i = len - 1; i > 0; --i) 
+    {
+        if (path[i] == L'\\')
+        {
             path[i] = L'\0';
             break;
         }
     }
 }
 
-void copyFile(const wchar_t* source, const wchar_t* destination) {
-    if (CopyFileW(source, destination, FALSE)) {
+void copyFile(const wchar_t* source, const wchar_t* destination) 
+{
+    if (CopyFileW(source, destination, FALSE)) 
+    {
         std::wcout << L"File copied successfully!\n";
     }
-    else {
+    else 
+    {
         std::wcout << L"Error copying file!\n";
     }
 }
 
-void searchFiles(const wchar_t* path, const wchar_t* mask) {
+void searchFiles(const wchar_t* path, const wchar_t* mask) 
+{
     WIN32_FIND_DATAW findFileData;
     wchar_t searchPath[MAX_PATH];
     wcscpy_s(searchPath, MAX_PATH, path);
@@ -65,22 +78,26 @@ void searchFiles(const wchar_t* path, const wchar_t* mask) {
     wcscat_s(searchPath, MAX_PATH, mask);
 
     HANDLE hFind = FindFirstFileW(searchPath, &findFileData);
-    if (hFind == INVALID_HANDLE_VALUE) {
+    if (hFind == INVALID_HANDLE_VALUE) 
+    {
         std::wcout << L"No files found for this mask.\n";
         return;
     }
 
     std::wcout << L"\nFiles matching " << mask << L":\n";
-    do {
+    do 
+    {
         std::wcout << findFileData.cFileName << L"\n";
     } while (FindNextFileW(hFind, &findFileData));
 
     FindClose(hFind);
 }
 
-void searchInFile(const wchar_t* filePath, const wchar_t* pattern) {
+void searchInFile(const wchar_t* filePath, const wchar_t* pattern) 
+{
     std::wifstream file(filePath);
-    if (!file.is_open()) {
+    if (!file.is_open()) 
+    {
         std::wcout << L"Error opening file!\n";
         return;
     }
@@ -88,10 +105,12 @@ void searchInFile(const wchar_t* filePath, const wchar_t* pattern) {
 
     wchar_t line[1024];
     int lineNumber = 0;
-    while (!file.eof()) {
+    while (!file.eof()) 
+    {
         file.getline(line, 1024);
         lineNumber++;
-        if (wcsstr(line, pattern)) {
+        if (wcsstr(line, pattern)) 
+        {
             std::wcout << L"[line " << lineNumber << L"]: " << line << L"\n";
         }
     }
@@ -99,9 +118,11 @@ void searchInFile(const wchar_t* filePath, const wchar_t* pattern) {
     file.close();
 }
 
-void findAndReplace(const wchar_t* filePath, const wchar_t* findText, const wchar_t* replaceText) {
+void findAndReplace(const wchar_t* filePath, const wchar_t* findText, const wchar_t* replaceText) 
+{
     std::wifstream file(filePath);
-    if (!file.is_open()) {
+    if (!file.is_open()) 
+    {
         std::wcout << L"Error opening file!\n";
         return;
     }
@@ -109,11 +130,13 @@ void findAndReplace(const wchar_t* filePath, const wchar_t* findText, const wcha
 
     wchar_t buffer[10240] = L"";
     wchar_t line[1024];
-    while (!file.eof()) {
+    while (!file.eof()) 
+    {
         file.getline(line, 1024);
 
         wchar_t* pos = wcsstr(line, findText);
-        while (pos) {
+        while (pos) 
+        {
             wchar_t temp[1024];
             wcsncpy_s(temp, line, pos - line);
             temp[pos - line] = L'\0';
@@ -128,7 +151,8 @@ void findAndReplace(const wchar_t* filePath, const wchar_t* findText, const wcha
     file.close();
 
     std::wofstream out(filePath);
-    if (!out.is_open()) {
+    if (!out.is_open()) 
+    {
         std::wcout << L"Error writing to file!\n";
         return;
     }
