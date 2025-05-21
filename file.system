@@ -48,6 +48,15 @@ void goUpDirectory(wchar_t* path) {
     }
 }
 
+void copyFile(const wchar_t* source, const wchar_t* destination) {
+    if (CopyFileW(source, destination, FALSE)) {
+        std::wcout << L"File copied successfully!\n";
+    }
+    else {
+        std::wcout << L"Error copying file!\n";
+    }
+}
+
 
 int main() 
 {
